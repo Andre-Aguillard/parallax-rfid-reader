@@ -2,6 +2,28 @@
 
 import RPi.GPIO as GPIO
 import serial
+from tkinter import *       ### This is to set up a GUI for the lock.
+
+### GUI for the Lock:
+class GUI4Lock(Frame):
+  def __init__(self, master):
+    Frame.__init__(self,master) ### This sets up the main window of the GUI
+       self.master = master     ### in order to build widgets on to pof it.
+      
+  def setupGUI(self):
+    l1 = Label(self.master, text="Please scan your card above or enter your ID below.")
+    l1.grid(row=0, column=0, sticky=E+W)
+    img = PhotoImage(file="logo.jpg")
+    l2 = Label(self.master image=image)
+    l2.image= img
+    l2.grid
+    e1 = Entry  (self.master)
+    e1.grid(row=1, column=1, sticky=W)
+
+window = Tk()
+window.title("Better Bike Lock Home")
+
+
 
 
 ENABLE_PIN  = 18              # The BCM pin number corresponding to GPIO1
