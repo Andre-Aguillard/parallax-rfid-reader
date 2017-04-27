@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-
 import RPi.GPIO as GPIO
 import serial
 from tkinter import *       ### This is to set up a GUI for the lock.
@@ -8,21 +6,23 @@ from tkinter import *       ### This is to set up a GUI for the lock.
 class GUI4Lock(Frame):
   def __init__(self, master):
     Frame.__init__(self,master) ### This sets up the main window of the GUI
-       self.master = master     ### in order to build widgets on to pof it.
+       self.master = master     ### in order to build widgets on to top it.
       
   def setupGUI(self):
-    l1 = Label(self.master, text="Please scan your card above or enter your ID below.")
-    l1.grid(row=0, column=0, sticky=E+W)
-    img = PhotoImage(file="logo.jpg")
-    l2 = Label(self.master image=image)
-    l2.image= img
-    l2.grid
+    l1 = Label(self.master, text="{}".format(RESPONSE))
+    l1.pack(side=LEFT, expand=1)
     e1 = Entry  (self.master)
-    e1.grid(row=1, column=1, sticky=W)
+    e1.pack(side=LEFT, expand=1)
+    b1 = Button(self.master, width=5, height=5, text="1")
+    b1.pack()
+    b2 = Button(self.master, text="2", width=5, height=5,)
+    b2.pack(side=RIGHT, expand=0)
 
 window = Tk()
 window.title("Better Bike Lock Home")
-
+t = GUI4Lock(window)
+t.setupGUI()
+window.mainloop()
 
 #Define variables
 
@@ -44,7 +44,31 @@ def validate_rfid(code):
     else:
         # We didn't match a valid code, so return False.
         return False
+      
+# Assigns a code to a lock
+def assignLock(code):
+    ## The code for the lock is the key in the dictionary and the empty lock number
+    ## becomes the value paired with it.
+    locks[code] = emptyLocks[0]
+    # If we assign a lock, we must then open that lock for the user to use.
+    #openLock(emptyLocks[0])
+    del emptyLocks[0]
+    
+# Checks to see if there are any open locks
+def checkLocks():
+    # If there are no empty locks, then there's nothing else to do.
+    if (emptyLocks = []):
+        response = "Sorry there are no empty locks at this time, \
+                    please try again later."
+    # If there are emptylocks, then assign a lock
+    else:
+        assignLock(code)
+        response = "Assigning you a lock..."
+    print response
 
+# Unlocks a lock and adds a that lock back to the list of empty locks
+def unlockLock(code):
+    pass
     
 def main():
     # Initialize the Raspberry Pi by quashing any warnings and telling it
@@ -74,41 +98,16 @@ def main():
     locks{}
     # Create a list of empty locks based initially off the number of locks -Aguillard
     # in the system
-    emptyLocks = [x in range len(1,NUMBER_OF_LOCKS+1)]
+    emptyLocks = [x in range len(1, NUMBER_OF_LOCKS + 1)]
     
-# Assigns a code to a lock
-def assignLock(code):
-    locks[code] = emptyLocks[0]
-    # If we assign a lock, we must then open that lock for the user to use.
-    #openLock(emptyLocks[0])
-    del emptyLocks[0]
-    
-    
-# Checks to see if there are any open locks
-def checkLocks():
-    # If there are no empty locks, then there's nothing else to do.
-    if (emptyLocks = []):
-        response = "Sorry there are no empty locks at this time, \
-                    please try again later."
-    # If there are emptylocks, then assign a lock
-    else:
-        assignLock(code)
-        response = "Assigning you a lock..."
-        
-        
-    
-  
-# Unlocks a lock and adds a that lock back to the list of empty locks
-def unlockLock(code):
-    pass
-
     # Wrap everything in a try block to catch any exceptions.
     try:
         # Loop forever, or until CTRL-C is pressed.
         while 1:
             # Read in 12 bytes from the serial port.
             data = ser.read(12)
-
+            RESPONSE = "To get a bike lock, please scan your card above or type in your ID."
+            print (RESPONSE)
             # Attempt to validate the data we just read.
             code = validate_rfid(data)
             
@@ -122,11 +121,13 @@ def unlockLock(code):
                   ## The response will be display on the GUI once that is finished
                   response = "Thank you for using a better bike lock, \
                           We appreciate your business. Have a great day!"
+                  print response
                 #If its a new code, check to see if there are any open locks
                 else:
                   checkLocks(code)
                   response = "Checking for open locks..."
-                
+                  print (response)
+                                  
     except:
         # If we caught an exception, then disable the reader by setting
         # the pin to HIGH, then exit.
