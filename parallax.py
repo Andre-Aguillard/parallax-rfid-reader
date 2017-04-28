@@ -6,7 +6,7 @@ from tkinter import *       ### This is to set up a GUI for the lock.
 class GUI4Lock(Frame):
   def __init__(self, master):
     Frame.__init__(self,master) ### This sets up the main window of the GUI
-       self.master = master     ### in order to build widgets on to top it.
+    self.master = master     ### in order to build widgets on to top it.
       
   def setupGUI(self):
     l1 = Label(self.master, text="{}".format(RESPONSE))
@@ -57,7 +57,7 @@ def assignLock(code):
 # Checks to see if there are any open locks
 def checkLocks():
     # If there are no empty locks, then there's nothing else to do.
-    if (emptyLocks = []):
+    if (emptyLocks == []):
         response = "Sorry there are no empty locks at this time, \
                     please try again later."
     # If there are emptylocks, then assign a lock
@@ -98,7 +98,7 @@ def main():
     locks{}
     # Create a list of empty locks based initially off the number of locks -Aguillard
     # in the system
-    emptyLocks = [x in range len(1, NUMBER_OF_LOCKS + 1)]
+    emptyLocks = [x in range (1, len(NUMBER_OF_LOCKS + 1))]
     
     # Wrap everything in a try block to catch any exceptions.
     try:
