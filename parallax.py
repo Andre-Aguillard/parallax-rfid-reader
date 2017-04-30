@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import serial
-from tkinter import *       ### This is to set up a GUI for the lock.
+from Tkinter import *       ### This is to set up a GUI for the lock.
 from time import sleep 
 
 ### GUI for the Lock:
