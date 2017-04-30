@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import serial
-from Tkinter import *       ### This is to set up a GUI for the lock.
+from tkinter import *       ### This is to set up a GUI for the lock.
+from time import sleep 
 
 ### GUI for the Lock:
 class GUI4Lock(Frame):
@@ -21,7 +22,7 @@ class GUI4Lock(Frame):
 window = Tk()
 window.title("Better Bike Lock Home")
 t = GUI4Lock(window)
-RESPONSE = " WOW"
+RESPONSE = "Andre"
 t.setupGUI()
 window.mainloop()
 
@@ -32,6 +33,7 @@ SERIAL_PORT = '/dev/ttyAMA0'  # The location of our serial port.  This may
                               # vary depending on OS version.
   
 NUMBER_OF_LOCKS = 2           #set the number of locks
+OPEN_TIME = 10                ### Time that lock is open for
 
 def validate_rfid(code):
     # A valid code will be 12 characters long with the first char being
@@ -56,7 +58,7 @@ def assignLock(code):
     del emptyLocks[0]
     
 # Checks to see if there are any open locks
-def checkLocks():
+def checkLocks(code):
     # If there are no empty locks, then there's nothing else to do.
     if (emptyLocks == []):
         response = "Sorry there are no empty locks at this time, \
@@ -69,7 +71,13 @@ def checkLocks():
 
 # Unlocks a lock and adds a that lock back to the list of empty locks
 def openLock(code):
-    pass
+    # Opens the locks
+    print ("Opening lock #{} ").format(locks[code])
+    print ("You have {} seconds to access your lock").format(OPEN_TIME)
+    x = locks[code]
+    GPIO.output(locksWithPins[x], GPIO.HIGH)
+    sleep(OPEN_TIME)
+    GPIO.output(locksWithPins[x], GPIO.LOW)
     
 def main():
     # Initialize the Raspberry Pi by quashing any warnings and telling it
@@ -84,6 +92,7 @@ def main():
     # Next we'll create a list generated from the number of locks in the
     # system, and use that to link them to GPIO pins from a list of available ones. 
     pins = [21,20,16,12,26,19,13,6,5,25,24,23]
+    global locksWithPins
     locksWithPins = {} # A dictionary to keep track of which pins are associated with
                        # which locks
     for x in range (1,NUMBER_OF_LOCKS+1):
@@ -107,9 +116,11 @@ def main():
                         timeout  = 1)
     
     # Create a dictionary that associates the bike lock number with a code -Aguillard
+    global locks
     locks{}
     # Create a list of empty locks based initially off the number of locks -Aguillard
     # in the system
+    global emptyLocks
     emptyLocks = [x in range (1, len(NUMBER_OF_LOCKS + 1))]
     
     # Wrap everything in a try block to catch any exceptions.
@@ -128,7 +139,12 @@ def main():
                 print("Read RFID code: " + code);
                 #check to see if the 
                 if (code in locks) :
-                  unlockLock(code)
+                  #If code is in locks, then the person is unlocking their lock so open the lock
+                  openLock(code)
+                  #Since this is the second time the code is scanned, that lock is now free, and empty
+                  emptyLocks.append (locks[code])
+                  # And it also is no longer associated with a code. 
+                  del locks[code]
                   # Set the response. 
                   ## The response will be display on the GUI once that is finished
                   response = "Thank you for using a better bike lock, \
@@ -149,5 +165,3 @@ def main():
         
 if __name__ == "__main__":
     main()
-
-   
