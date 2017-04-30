@@ -117,7 +117,7 @@ def main():
     
     # Create a dictionary that associates the bike lock number with a code -Aguillard
     global locks
-    locks{}
+    locks = {}
     # Create a list of empty locks based initially off the number of locks -Aguillard
     # in the system
     global emptyLocks
