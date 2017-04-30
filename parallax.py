@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import serial
-from tkinter import *       ### This is to set up a GUI for the lock.
+from Tkinter import *       ### This is to set up a GUI for the lock.
 
 ### GUI for the Lock:
 class GUI4Lock(Frame):
@@ -21,6 +21,7 @@ class GUI4Lock(Frame):
 window = Tk()
 window.title("Better Bike Lock Home")
 t = GUI4Lock(window)
+RESPONSE = " WOW"
 t.setupGUI()
 window.mainloop()
 
@@ -86,7 +87,7 @@ def main():
     locksWithPins = {} # A dictionary to keep track of which pins are associated with
                        # which locks
     for x in range (1,NUMBER_OF_LOCKS+1):
-      locksWithPins[x] = pin[0]
+      locksWithPins[x] = pins[0]
       GPIO.setup(pins[0], GPIO.OUT)
       del pins[0]
       
