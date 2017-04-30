@@ -67,7 +67,7 @@ def checkLocks():
     print response
 
 # Unlocks a lock and adds a that lock back to the list of empty locks
-def unlockLock(code):
+def openLock(code):
     pass
     
 def main():
@@ -79,7 +79,18 @@ def main():
     # This pin corresponds to GPIO18, which we'll use to turn the RFID
     # reader on and off with.
     GPIO.setup(ENABLE_PIN, GPIO.OUT)
-
+    
+    # Next we'll create a list generated from the number of locks in the
+    # system, and use that to link them to GPIO pins from a list of available ones. 
+    pins = [21,20,16,12,26,19,13,6,5,25,24,23]
+    locksWithPins = {} # A dictionary to keep track of which pins are associated with
+                       # which locks
+    for x in range (1,NUMBER_OF_LOCKS+1):
+      locksWithPins[x] = pin[0]
+      GPIO.setup(pins[0], GPIO.OUT)
+      del pins[0]
+      
+      
     # Setting the pin to LOW will turn the reader on.  You should notice
     # the green LED light on the reader turn red if successfully enabled.
 
