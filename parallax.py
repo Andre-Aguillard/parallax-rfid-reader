@@ -54,7 +54,8 @@ def assignLock(code):
     ## becomes the value paired with it.
     locks[code] = emptyLocks[0]
     # If we assign a lock, we must then open that lock for the user to use.
-    #openLock(emptyLocks[0])
+    openLock(code)
+    #And since that lock is full, remove it from the list of open locks
     del emptyLocks[0]
     
 # Checks to see if there are any open locks
@@ -65,18 +66,19 @@ def checkLocks(code):
                     please try again later."
     # If there are emptylocks, then assign a lock
     else:
-        assignLock(code)
         response = "Assigning you a lock..."
-    print response
+        print (response)
+        assignLock(code)
 
 # Unlocks a lock and adds a that lock back to the list of empty locks
 def openLock(code):
     # Opens the locks
-    print ("Opening lock #{} ").format(locks[code])
     print ("You have {} seconds to access your lock").format(OPEN_TIME)
     x = locks[code]
+    print ("Opening lock")
     GPIO.output(locksWithPins[x], GPIO.HIGH)
     sleep(OPEN_TIME)
+    print ("Cosing lock...") 
     GPIO.output(locksWithPins[x], GPIO.LOW)
     
 def main():
@@ -121,46 +123,47 @@ def main():
     # Create a list of empty locks based initially off the number of locks -Aguillard
     # in the system
     global emptyLocks
-    emptyLocks = [x in range (1, len(NUMBER_OF_LOCKS + 1))]
+    emptyLocks = [x in range (1,(NUMBER_OF_LOCKS + 1))]
     
     # Wrap everything in a try block to catch any exceptions.
-    try:
-        # Loop forever, or until CTRL-C is pressed.
-        while 1:
-            # Read in 12 bytes from the serial port.
-            data = ser.read(12)
-            RESPONSE = "To get a bike lock, please scan your card above or type in your ID."
-            print (RESPONSE)
-            # Attempt to validate the data we just read.
-            code = validate_rfid(data)
-            
-            # If validate_rfid() returned a code, display it.
-            if code:
-                print("Read RFID code: " + code);
-                #check to see if the 
-                if (code in locks) :
-                  #If code is in locks, then the person is unlocking their lock so open the lock
-                  openLock(code)
-                  #Since this is the second time the code is scanned, that lock is now free, and empty
-                  emptyLocks.append (locks[code])
-                  # And it also is no longer associated with a code. 
-                  del locks[code]
-                  # Set the response. 
-                  ## The response will be display on the GUI once that is finished
-                  response = "Thank you for using a better bike lock, \
-                          We appreciate your business. Have a great day!"
-                  print response
-                #If its a new code, check to see if there are any open locks
-                else:
-                  checkLocks(code)
-                  response = "Checking for open locks..."
-                  print (response)
+##    try:
+      # Loop forever, or until CTRL-C is pressed.
+    while 1:
+          # Read in 12 bytes from the serial port.
+          data = ser.read(12)
+          RESPONSE = "To get a bike lock, please scan your card above or type in your ID."
+          print (RESPONSE)
+          # Attempt to validate the data we just read.
+          code = validate_rfid(data)
+          
+          # If validate_rfid() returned a code, display it.
+          if code:
+              print("Read RFID code: " + code);
+              #check to see if the 
+              if (code in locks) :
+                #If code is in locks, then the person is unlocking their lock so open the lock
+                openLock(code)
+                #Since this is the second time the code is scanned, that lock is now free, and empty
+                emptyLocks.append (locks[code])
+                # And it also is no longer associated with a code. 
+                del locks[code]
+                # Set the response. 
+                ## The response will be display on the GUI once that is finished
+                response = "Thank you for using a better bike lock, \n \
+                        We appreciate your business. Have a great day!"
+                print response
+              #If its a new code, check to see if there are any open locks
+              else:
+                response = "Checking for open locks..."
+                print (response)
+                checkLocks(code)
+                print "Thank you."
                                   
-    except:
-        # If we caught an exception, then disable the reader by setting
-        # the pin to HIGH, then exit.
-        print("Disabling RFID reader...")
-        GPIO.output(ENABLE_PIN, GPIO.HIGH)
+##    except:
+##        # If we caught an exception, then disable the reader by setting
+##        # the pin to HIGH, then exit.
+##        print("Disabling RFID reader...")
+##        GPIO.output(ENABLE_PIN, GPIO.HIGH)
 
         
 if __name__ == "__main__":
