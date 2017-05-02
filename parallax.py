@@ -9,15 +9,37 @@ class GUI4Lock(Frame):
     Frame.__init__(self,master) ### This sets up the main window of the GUI
     self.master = master     ### in order to build widgets on to top it.
       
-  def setupGUI(self):
-    l1 = Label(self.master, text="{}".format(RESPONSE))
-    l1.pack(side=LEFT, expand=1)
-    e1 = Entry  (self.master)
-    e1.pack(side=LEFT, expand=1)
-    b1 = Button(self.master, width=5, height=5, text="1")
-    b1.pack()
-    b2 = Button(self.master, text="2", width=5, height=5,)
-    b2.pack(side=RIGHT, expand=0)
+  def setupGUI(self): # - Santiago
+        #organize the GUI
+        # this function works fine, as long as you have the images as actual GIFs
+        self.pack(fill=BOTH, expand=1)
+        #setup the player input at the bottom of the GUI
+        #widget is a Tkinter Entry
+        #background is white; bind return key to function process in class
+        GUI4Lock.player_input = Entry(self, bg="white")
+        GUI4Lock.player_input.bind("<Return>", self.process)
+        GUI4Lock.player_input.pack(side=BOTTOM, fill=X)
+        GUI4Lock.player_input.focus()
+        
+        # setup image to the left of GUI
+        # widget is a Tkinter label
+        # don't let image control width's size
+        img = None
+        GUI4Lock.image = Label(self, width=WIDTH / 2, height=HEIGHT, image = img)
+        GUI4Lock.image.image = img
+        GUI4Lock.image.pack(side=LEFT, fill=Y)
+        GUI4Lock.image.pack_propagate(False)
+        
+        # setup text to right of GUI
+        # first, place frame where the text will be displayed
+        text_frame = Frame(self, width=WIDTH / 2, height=HEIGHT)
+        # widget - same deal as above
+        # disable by default
+        # don't let it control frame's size # is there any way to put the text in the middle? Having it to the left
+        GUI4Lock.text = Text(text_frame, bg="lightgrey", state=DISABLED)
+        GUI4Lock.text.pack(fill=Y, expand=1)
+        text_frame.pack(side=RIGHT, fill=Y)
+        text_frame.pack_propagate(False)
 
 window = Tk()
 window.title("Better Bike Lock Home")
