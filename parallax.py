@@ -9,7 +9,7 @@ class GUI4Lock(Frame):
     Frame.__init__(self,master) ### This sets up the main window of the GUI
     self.master = master     ### in order to build widgets on to top it.
       
-  def setupGUI(self): # - Santiago
+  def setupGUI(self):
         #organize the GUI
         # this function works fine, as long as you have the images as actual GIFs
         self.pack(fill=BOTH, expand=1)
@@ -40,22 +40,11 @@ class GUI4Lock(Frame):
         GUI4Lock.text.pack(fill=Y, expand=1)
         text_frame.pack(side=RIGHT, fill=Y)
         text_frame.pack_propagate(False)
-
-window = Tk()
-window.title("Better Bike Lock Home")
-t = GUI4Lock(window)
-RESPONSE = "Andre"
-t.setupGUI()
-window.mainloop()
-
-#Define variables
-
-ENABLE_PIN  = 18              # The BCM pin number corresponding to GPIO1
-SERIAL_PORT = '/dev/ttyAMA0'  # The location of our serial port.  This may
-                              # vary depending on OS version.
-  
-NUMBER_OF_LOCKS = 2           #set the number of locks
-OPEN_TIME = 10                ### Time that lock is open for
+  def setStatus(self):
+    # enable text widget, clear it, set it, disable it
+        GUI4Lock.text.config(state=NORMAL)
+        GUI4Lock.text.delete("1.0", END)
+        GUI4Lock.text.config(state=DISABLED
 
 def validate_rfid(code):
     # A valid code will be 12 characters long with the first char being
@@ -124,7 +113,6 @@ def main():
       GPIO.setup(pins[0], GPIO.OUT)
       del pins[0]
       
-      
     # Setting the pin to LOW will turn the reader on.  You should notice
     # the green LED light on the reader turn red if successfully enabled.
 
@@ -153,14 +141,13 @@ def main():
     while 1:
           # Read in 12 bytes from the serial port.
           data = ser.read(12)
-          RESPONSE = "To get a bike lock, please scan your card above or type in your ID."
-          print (RESPONSE)
+          response = "To get a bike lock, please scan your card above or type in your ID."
           # Attempt to validate the data we just read.
           code = validate_rfid(data)
           
           # If validate_rfid() returned a code, display it.
           if code:
-              print("Read RFID code: " + code);
+              response = ("Read RFID code: " + code);
               #check to see if the 
               if (code in locks) :
                 #If code is in locks, then the person is unlocking their lock so open the lock
@@ -173,14 +160,12 @@ def main():
                 ## The response will be display on the GUI once that is finished
                 response = "Thank you for using a better bike lock, \n \
                         We appreciate your business. Have a great day!"
-                print response
               #If its a new code, check to see if there are any open locks
               else:
                 response = "Checking for open locks..."
-                print (response)
                 checkLocks(code)
                 print "Thank you."
-                                  
+          GUI4Lock.setStatus(response)               
 ##    except:
 ##        # If we caught an exception, then disable the reader by setting
 ##        # the pin to HIGH, then exit.
@@ -190,3 +175,20 @@ def main():
         
 if __name__ == "__main__":
     main()
+#Define variables
+
+ENABLE_PIN  = 18              # The BCM pin number corresponding to GPIO1
+SERIAL_PORT = '/dev/ttyAMA0'  # The location of our serial port.  This may
+                              # vary depending on OS version.
+  
+NUMBER_OF_LOCKS = 2           #set the number of locks
+OPEN_TIME = 10                ### Time that lock is open for   
+                             
+window = Tk()
+window.title("Better Bike Lock Home")
+t = GUI4Lock(window)
+t.setupGUI()
+                             
+window.mainloop()
+
+                          
