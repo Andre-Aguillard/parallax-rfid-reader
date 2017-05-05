@@ -27,9 +27,9 @@ class GUI4Lock(Frame):
         # widget is a Tkinter label
         # don't let image control width's size
         img = None
-        GUI4Lock.image = Label(self, width=WIDTH, height=HEIGHT/2, image = img)
+        GUI4Lock.image = Label(self, width=WIDTH, height=HEIGHT/3, image = img)
         GUI4Lock.image.image = img
-        GUI4Lock.image.pack(side= TOP, fill=X, expand=1)
+        GUI4Lock.image.pack(side= LEFT, fill=X, expand=1)
         GUI4Lock.image.pack_propagate(False)
         
         # setup text at bottom left of GUI
@@ -44,7 +44,7 @@ class GUI4Lock(Frame):
         text_frame.pack_propagate(False)
         
         ##Frame to hold the buttons, Yes Andre figured out how to do this himself.
-        button_frame = LabelFrame(self,text="Buttons for user input" ,width= WIDTH/2, height=HEIGHT/2, relief =RAISED)
+        button_frame = LabelFrame(self,text="Buttons for user input" ,width= WIDTH/2, height=HEIGHT, relief =RAISED)
         ##Define what each button looks like and does. 
         GUI4Lock.button1= Button(button_frame, text="1", padx=10, pady=10, width=10,command= lambda: inputNumber(1))
         GUI4Lock.button2= Button(button_frame, text="2", padx=10, pady=10, width=10,command= lambda: inputNumber(2))
