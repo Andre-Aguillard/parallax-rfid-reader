@@ -1,5 +1,5 @@
-#import RPi.GPIO as GPIO
-#import serial
+import RPi.GPIO as GPIO
+import serial
 from Tkinter import *       ### This is to set up a GUI for the lock.
 from time import sleep, time
 
@@ -95,7 +95,7 @@ class GUI4Lock(Frame):
 def RFID_tag():
     # This takes the time the function was called, and converts it to Milliseconds
     startTime = int(time.time() * 1000)
-    while (int(time.time()*1000) < startTime + 15 *1000)):
+    while (int(time.time()*1000) < startTime + 15 *1000):
         data = ser.read(12)
         # Attempt to validate the data we just read.
         code = validate_rfid(data)
@@ -112,14 +112,14 @@ def RFID_tag():
                     We appreciate your business. Have a great day!"
             display(response)
             break
-      else:
+        else:
           #If its a new code, check to see if there are any open locks
             response = "Checking for open locks..."
             display(response)
             checkLocks(code)
             display("Thank you for using a better bike lock, \n \
                     We appreciate your business. Have a great day!")
-                break
+            break
 
 def validate_rfid(code):
     # A valid code will be 12 characters long with the first char being
