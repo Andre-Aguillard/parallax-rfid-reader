@@ -323,6 +323,7 @@ def display(response):
     GUI4Lock.text.insert(END, response)
     print (response)
     GUI4Lock.text.config(state=DISABLED)
+    #Updates the Tk window to show the progress of the locking sequence. 
     window.update()
         
 
