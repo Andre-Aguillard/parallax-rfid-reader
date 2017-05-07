@@ -56,6 +56,7 @@ class GUI4Lock(Frame):
         GUI4Lock.button8= Button(button_frame, text="8", padx=10, pady=10, width=10,command= lambda: inputNumber(8))
         GUI4Lock.button9= Button(button_frame, text="9", padx=10, pady=10, width=10,command= lambda: inputNumber(9))
         GUI4Lock.button0= Button(button_frame, text="0", padx=10, pady=10, width=10,command= lambda: inputNumber(0))
+        GUI4Lock.buttonPOUND= Button(button_frame, text="#", padx=10, pady=10, width=10,command= lambda: inputNumber('#"))
         GUI4Lock.buttonRFID= Button(button_frame, text="RFID", padx=10, pady=10, width=10, command= RFID_tag)
         GUI4Lock.buttonY= Button(button_frame, text="YES", padx=10, pady=10, width=10,command=  inputYES)
         GUI4Lock.buttonN= Button(button_frame, text="NO", padx=10, pady=10, width=10,command= inputNO) 
@@ -73,6 +74,7 @@ class GUI4Lock(Frame):
         GUI4Lock.buttonRFID.grid(row=4, column=1)
         GUI4Lock.buttonY.grid(row=5, column=0)
         GUI4Lock.buttonN.grid(row=5, column=2)
+        GUI4Lock.buttonPOUND.grid(row=5, column=1)
         # initalize the button-frame, and don't let it control the frame's size
         ## Place it on the right side and let it be full sized.         
         button_frame.pack(side=RIGHT, fill=X, expand=1)
@@ -162,7 +164,8 @@ def setup():
 
     display("Enabling RFID reader...\n")
     GPIO.output(ENABLE_PIN, GPIO.LOW)
-
+    # Set ser as a global so it can be accessed later in the program. 
+    global ser
     # Set up the serial port as per the Parallax reader's datasheet.
     ser = serial.Serial(baudrate = 2400,
                       bytesize = serial.EIGHTBITS,
@@ -226,9 +229,8 @@ def openLock(code):
 def inputNumber(number):
         #Turns the input number into a string
         number = str(number)
-        #appends the input number to the list
+        #accesses the global list ManCode
         global ManCode
-        
         if (len(ManCode)== 10):
             GUI4Lock.button0.config(state=DISABLED)
             GUI4Lock.button1.config(state=DISABLED)
@@ -246,7 +248,7 @@ def inputNumber(number):
             display("Your Bike Lock Code is: " + mCode + "\n\nIt is recommended that you" \
                             + " write down\nyour code, or take a picture of it \nwith your phone." + \
                             "\n\nAre you satisfied with your code? \nPress YES or NO to the left to \nconfirm.")
-            ##Waites for manual input and clears the list ManCode, then enables all the number buttons again.
+            ## Waites for manual input and clears the list ManCode, then enables all the number buttons again.
             del ManCode [:]
             GUI4Lock.button0.config(state=NORMAL)
             GUI4Lock.button1.config(state=NORMAL)
@@ -260,13 +262,22 @@ def inputNumber(number):
             GUI4Lock.button9.config(state=NORMAL)
         else :
             #Appends the number to ManCode list
+            #Special exception for # sign
+            if (number='#'):
+                if(len(ManCode)<10):
+                    response = "Pound sign (#) should only be pressed at the end of your code, please input a different number"
+                    display(response)
+                    window.update
+                    sleep(2)
+                else:
+                    pass        
             ManCode.append(number)
             codeCount = len(ManCode)
             GUI4Lock.text.config(state=NORMAL)
             GUI4Lock.text.delete("1.0", END)
             GUI4Lock.text.insert(END, "You've entered manual code mode. \n\n" + \
-                                 "Please input a 10-digit code using \nthe number pad " +\
-                                 "on the left. \n \nYour current code is: " + str(codeCount) \
+                                 "Please input a 10-digit code using \nthe number pad below and " +\
+                                 "press the pound sign (#) once you're done. \n \nYour current code is: " + str(codeCount) \
                                   + " character(s)")
             GUI4Lock.text.config(state=DISABLED)
 
@@ -284,21 +295,16 @@ def inputYES():
     
 def inputNO():
     if (len(mCode)==10):
-        response = "Would you like to enter a new code?"
-        display (response)
-        
-    if (YorN == "newManCode"):
-        response="No, ok... \n\n\n Goodbye!"
-        display(response)
-        response = "Welcome to Better Bike Lock. \n\nPlease scan your RFID card above \nor " \
-                    + "press a number to the right to \nmanually input a code."
-    if (YorN == "nothing"):
-        response = "Please use the keypad >>>" +"\nto input a manual code."
-    display(response)
-    
+        displayHome()
+    else:
+       response = "Please use the keypad >>>" +"\nto input a manual code."
+        display(response)      
+            
 def manualCode(mCode):
     if (mCode in locks) :
         #If code is in locks, then the person is unlocking their lock so open the lock
+        display("Code accepted! Accessing Lock Now...")
+        window.update
         openLock(mCode)
         #Since this is the second time the code is scanned, that lock is now free, and empty
         emptyLocks.append (locks[mCode])
@@ -306,8 +312,8 @@ def manualCode(mCode):
         del locks[mCode]
         # Set the response. 
         ## The response will be display on the GUI once that is finished
-        response = "Thank you for using a better bike lock, \n \
-                We appreciate your business. Have a great day!"
+        response = "Thank you for using a better bike lock, \n" \
+                +"We appreciate your business. Have a great day!"
         display(response)
     #If its a new code, check to see if there are any open locks
     else:
@@ -315,12 +321,10 @@ def manualCode(mCode):
         display(response)
         sleep(2)
         checkLocks(mCode)
-        display("Thank you.for using a better bike lock, \n \
-                We appreciate your business. Have a great day!")
+        display("Thank you.for using a better bike lock, \n" \
+                +"We appreciate your business. Have a great day!")
         sleep(2)
-        response = "Welcome to Better Bike Lock. \n\nPlease scan your RFID card above \nor " \
-                    + "press a number to the right to \nmanually input a code."
-        
+        displayHome()
                 
 def display(response):
     GUI4Lock.text.config(state=NORMAL)
@@ -330,7 +334,16 @@ def display(response):
     print (response)
     GUI4Lock.text.config(state=DISABLED)
     window.update()
-        
+    
+def displayHome():
+    GUI4Lock.text.config(state=NORMAL)
+    GUI4Lock.text.delete("1.0", END)
+    # Display the desired text on the screen.
+    GUI4Lock.text.insert(END, "Welcome to a Better Bike Lock Home screen.\n To begin, please hit the" \
+                + "RFID button to scan a compatable RFID card or hit a number to enter a manual code." )
+    print (displayHome)
+    GUI4Lock.text.config(state=DISABLED)
+    window.update()
 
 
 #Used to define the height and width of the GUI
