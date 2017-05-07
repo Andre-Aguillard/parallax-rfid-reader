@@ -99,7 +99,7 @@ def RFID_tag():
     # This takes the time the function was called, and converts it to Milliseconds
     startTime = int(time() * 1000)
     while (int(time()*1000) < startTime + 15 *1000):
-        response = "Entering RFID mode. \n\n please scan your RFID card now."
+        response = "Entering RFID mode. \n\nPlease scan your RFID card now."
         display(response)
         data = ser.read(12)
         # Attempt to validate the data we just read.
@@ -347,8 +347,8 @@ def displayHome():
     GUI4Lock.text.config(state=NORMAL)
     GUI4Lock.text.delete("1.0", END)
     # Display the desired text on the screen.
-    GUI4Lock.text.insert(END, "Welcome to a Better Bike Lock Home screen.\n To begin, please hit the" \
-                + "RFID button to scan a compatable RFID card or hit a number to enter a manual code." )
+    GUI4Lock.text.insert(END, "Welcome to a Better Bike Lock Home screen.\n\nTo begin, please hit the " \
+                + "RFID button to scan a compatable RFID card \nor hit a number to enter a manual code." )
     print (displayHome)
     GUI4Lock.text.config(state=DISABLED)
     window.update()
