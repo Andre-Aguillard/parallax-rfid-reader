@@ -116,19 +116,20 @@ def RFID_tag():
             response = "Thank you for using a better bike lock, \n" \
                     "We appreciate your business. Have a great day!"
             display(response)
-            break
         elif(code):
-          #If its a new code, check to see if there are any open locks
+            #If its a new code, check to see if there are any open locks
             response = "Checking for open locks..."
             display(response)
             checkLocks(code)
             display("Thank you for using a better bike lock, \n \
                     We appreciate your business. Have a great day!")
-            break
+        break
             
     response = "The RFID scanner has timed out. \nPlease press the button again or enter " \
                 "a manual code by pressing the buttons. \n\nThank You. "
     display(response)
+    sleep(2)
+    displayHome()
 
 def validate_rfid(code):
     # A valid code will be 12 characters long with the first char being
