@@ -99,6 +99,8 @@ def RFID_tag():
     # This takes the time the function was called, and converts it to Milliseconds
     startTime = int(time() * 1000)
     while (int(time()*1000) < startTime + 15 *1000):
+        response = "Entering RFID mode. \n\n please scan your RFID card now."
+        display(response)
         data = ser.read(12)
         # Attempt to validate the data we just read.
         code = validate_rfid(data)
