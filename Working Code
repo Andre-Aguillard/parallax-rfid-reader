@@ -114,7 +114,7 @@ def RFID_tag():
             # Set the response. 
             ## The response will be display on the GUI once that is finished
             response = "Thank you for using a better bike lock, \n" \
-                    "We appreciate your business. Have a great day!"
+                    +"We appreciate your business. Have a great day!"
             display(response)
             break
         elif(code):
@@ -122,8 +122,8 @@ def RFID_tag():
             response = "Checking for open locks..."
             display(response)
             checkLocks(code)
-            display("Thank you for using a better bike lock, \n \
-                    We appreciate your business. Have a great day!")
+            display("Thank you for using a better bike lock, \n" \
+                    +"We appreciate your business. Have a great day!")
             break
     else:        
         response = "The RFID scanner has timed out. \nPlease press the button again or enter " \
@@ -329,7 +329,7 @@ def manualCode(mCode):
         display(response)
         sleep(2)
         checkLocks(mCode)
-        display("Thank you.for using a better bike lock, \n" \
+        display("Thank you for using a better bike lock, \n" \
                 +"We appreciate your business. Have a great day!")
         sleep(2)
         displayHome()
