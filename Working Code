@@ -124,6 +124,8 @@ def RFID_tag():
             checkLocks(code)
             display("Thank you for using a better bike lock, \n" \
                     +"We appreciate your business. Have a great day!")
+            sleep(2)
+            displayHome()
             break
     else:        
         response = "The RFID scanner has timed out. \nPlease press the button again or enter " \
