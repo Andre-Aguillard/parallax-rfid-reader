@@ -351,7 +351,7 @@ def displayHome():
     # Display the desired text on the screen.
     GUI4Lock.text.insert(END, "Welcome to a Better Bike Lock Home screen.\n\nTo begin, please hit the " \
                 + "RFID button to scan a compatable RFID card \nor hit a number to enter a manual code." \
-                + "\n\nTo unlock your bike, either scan your RFID card again, or re-enter your manual code.")
+                + "\n\nTo unlock your bike, either scan your RFID card again, \nor re-enter your manual code.")
     print (displayHome)
     GUI4Lock.text.config(state=DISABLED)
     window.update()
