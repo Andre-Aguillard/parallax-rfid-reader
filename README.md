@@ -3,7 +3,7 @@ To view the final code please see the Working_Code.py file.
   
 To just view the GUI and Manual code method, download the bikelock.gif and WorkingCode-GUIandManual_Input.py files   
 These should function on any computer that has python with the Tkinter module.
-![Alt text](GUI_Home_example.png)
+![Alt text](GUI_Home_example.PNG)
 
 
 #### Louisiana Tech Engineering HNRS 122- H05 Final Project
