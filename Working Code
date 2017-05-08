@@ -233,7 +233,6 @@ def openLock(code):
     sleep(2)
     GPIO.output(locksWithPins[x], GPIO.LOW)
 
-
 def inputNumber(number):
         #Turns the input number into a string
         number = str(number)
@@ -276,18 +275,19 @@ def inputNumber(number):
                     response = "Pound sign (#) should only be pressed at the end of your code, please input a different number"
                     display(response)
                     window.update
-                    sleep(2)
+                    sleep(3)
                 else:
-                    pass        
-            ManCode.append(number)
-            codeCount = len(ManCode)
-            GUI4Lock.text.config(state=NORMAL)
-            GUI4Lock.text.delete("1.0", END)
-            GUI4Lock.text.insert(END, "You've entered manual code mode. \n\n" + \
-                                 "Please input a 10-digit code using \nthe number pad below and " +\
-                                 "press the pound sign (#) once you're done. \n \nYour current code is: " + str(codeCount) \
-                                  + " character(s)")
-            GUI4Lock.text.config(state=DISABLED)
+                    pass
+            elif(number != ("#")):        
+                ManCode.append(number)
+                codeCount = len(ManCode)
+                GUI4Lock.text.config(state=NORMAL)
+                GUI4Lock.text.delete("1.0", END)
+                GUI4Lock.text.insert(END, "You've entered manual code mode. \n\n" + \
+                                     "Please input a 10-digit code using \nthe number pad below and " +\
+                                     "press the pound sign (#) once you're done. \n \nYour current code is: " + str(codeCount) \
+                                      + " character(s)")
+                GUI4Lock.text.config(state=DISABLED)
 
 def inputYES():
     global mCode
