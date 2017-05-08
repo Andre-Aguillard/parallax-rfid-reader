@@ -81,12 +81,10 @@ class GUI4Lock(Frame):
         button_frame.pack_propagate(False)
            
     def start(self):
-        response = "Welcome to Better Bike Lock. \n\nPlease scan your RFID card below or " \
-                    + "press a number at the bottom right to \nmanually input a code."
         self.setupGUI()
         self.setLogoImage()
         setup()
-        display(response)
+        displayHome()
  
     def setLogoImage(self):
         GUI4Lock.original =PhotoImage(file="bikelock.gif")
@@ -352,7 +350,8 @@ def displayHome():
     GUI4Lock.text.delete("1.0", END)
     # Display the desired text on the screen.
     GUI4Lock.text.insert(END, "Welcome to a Better Bike Lock Home screen.\n\nTo begin, please hit the " \
-                + "RFID button to scan a compatable RFID card \nor hit a number to enter a manual code." )
+                + "RFID button to scan a compatable RFID card \nor hit a number to enter a manual code." \
+                + "\n\nTo unlock your bike, either scan your RFID card again, or re-enter your manual code.")
     print (displayHome)
     GUI4Lock.text.config(state=DISABLED)
     window.update()
